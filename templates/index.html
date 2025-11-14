@@ -1,97 +1,112 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ESP32 Dashboard</title>
 <link rel="stylesheet" href="/static/style.css">
-<script src="https://code.iconify.design/2/2.2.1/iconify.min.js"></script>
 </head>
-
-<body class="light">
-
+<body class="{{ theme }}">
 <div class="app">
+  <div class="sidebar">
+    <div class="logo">ESP</div>
+    <button id="btn-led1" class="icon-btn active" title="LED1" onclick="showPage('led1')">💡</button>
+    <button id="btn-led2" class="icon-btn" title="LED2" onclick="showPage('led2')">🔆</button>
+    <button id="btn-wifi" class="icon-btn" title="WiFi" onclick="showPage('wifi')">📶</button>
+    <button id="btn-effects" class="icon-btn" title="Effects" onclick="showPage('effects')">✨</button>
+    <button id="btn-settings" class="icon-btn" title="Settings" onclick="showPage('settings')">⚙️</button>
+  </div>
 
-    <!-- SIDEBAR -->
-    <div class="sidebar">
-        <div class="icon active" id="btn-led1" onclick="showPage('led1')">
-            <span class="iconify" data-icon="mdi:lightbulb-on"></span>
-        </div>
-
-        <div class="icon" id="btn-led2" onclick="showPage('led2')">
-            <span class="iconify" data-icon="mdi:lightbulb"></span>
-        </div>
-
-        <div class="icon" id="btn-wifi" onclick="showPage('wifi')">
-            <span class="iconify" data-icon="mdi:wifi"></span>
-        </div>
-
-        <div class="icon" id="btn-settings" onclick="showPage('settings')">
-            <span class="iconify" data-icon="mdi:cog"></span>
-        </div>
-
-        <div class="icon" id="btn-log" onclick="showPage('logPage')">
-            <span class="iconify" data-icon="mdi:console"></span>
-        </div>
+  <div class="main">
+    <div class="header">
+      <div class="app-title" id="appTitle">Bảng Điều Khiển ESP32</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button id="btnRefresh" class="btn secondary">Lấy trạng thái</button>
+        <button id="btnTheme" class="btn secondary">Giao diện</button>
+        <button id="btnLang" class="btn secondary">Ngôn ngữ</button>
+      </div>
     </div>
 
-    <!-- MAIN CONTENT -->
-    <div class="main">
-
-        <!-- LED1 -->
-        <div id="led1" class="page active">
-            <h2>LED 1</h2>
-
-            <div class="card">
-                <button class="nbtn" onclick="toggleLED(1)">Bật/Tắt</button>
-            </div>
-
-            <div class="card">
-                <p>Độ sáng: <b id="val1">0</b>%</p>
-                <input type="range" id="slider1" min="0" max="100" class="slider">
-            </div>
-        </div>
-
-        <!-- LED2 -->
-        <div id="led2" class="page">
-            <h2>LED 2</h2>
-
-            <div class="card">
-                <button class="nbtn" onclick="toggleLED(2)">Bật/Tắt</button>
-            </div>
-
-            <div class="card">
-                <p>Độ sáng: <b id="val2">0</b>%</p>
-                <input type="range" id="slider2" min="0" max="100" class="slider">
-            </div>
-        </div>
-
-        <!-- WIFI -->
-        <div id="wifi" class="page">
-            <h2>WiFi</h2>
-            <div class="card">
-                <p>Danh sách WiFi sẽ hiện từ ESP (mode PC không hỗ trợ scan).</p>
-            </div>
-        </div>
-
-        <!-- SETTINGS -->
-        <div id="settings" class="page">
-            <h2>Cài đặt</h2>
-            <div class="card">
-                <button class="nbtn" onclick="setTheme('light')">Light</button>
-                <button class="nbtn" onclick="setTheme('dark')">Dark</button>
-            </div>
-        </div>
-
-        <!-- LOG -->
-        <div id="logPage" class="page">
-            <h2>Nhật ký</h2>
-            <pre id="logBox">Log sẽ hiển thị khi ESP gửi status</pre>
-        </div>
-
+    <div class="card page" id="page-led1" style="display:block">
+      <div class="title" id="title-led1">Đèn LED 1</div>
+      <button id="toggle1" class="btn">Bật / Tắt</button>
+      <div style="margin-top:12px;">Độ sáng hiện tại: <b id="val1">{{ pwm1 }}</b>%</div>
+      <div style="margin-top:12px">
+        <input id="slider1" class="slider" type="range" min="0" max="100" value="{{ pwm1 }}">
+      </div>
     </div>
 
+    <div class="card page" id="page-led2" style="display:none">
+      <div class="title" id="title-led2">Đèn LED 2</div>
+      <button id="toggle2" class="btn">Bật / Tắt</button>
+      <div style="margin-top:12px;">Độ sáng hiện tại: <b id="val2">{{ pwm2 }}</b>%</div>
+      <div style="margin-top:12px">
+        <input id="slider2" class="slider" type="range" min="0" max="100" value="{{ pwm2 }}">
+      </div>
+    </div>
+
+    <div class="card page" id="page-effects" style="display:none">
+      <div class="title">Hiệu ứng LED</div>
+      <div id="effectBox">
+        <div class="tag" data-effect="none" onclick="chooseEffect('none')">Tắt</div>
+        <div class="tag" data-effect="sos" onclick="chooseEffect('sos')">SOS</div>
+        <div class="tag" data-effect="blink_fast" onclick="chooseEffect('blink_fast')">Nháy nhanh</div>
+        <div class="tag" data-effect="blink_slow" onclick="chooseEffect('blink_slow')">Nháy chậm</div>
+        <div class="tag" data-effect="fade" onclick="chooseEffect('fade')">Fade</div>
+        <div class="tag" data-effect="breathing" onclick="chooseEffect('breathing')">Breathing</div>
+      </div>
+      <div class="title" style="margin-top:16px">Mục tiêu (Target)</div>
+      <div class="checkbox-group">
+        <label><input type="checkbox" id="eff-target-1" value="led1" checked> LED 1</label>
+        <label><input type="checkbox" id="eff-target-2" value="led2" checked> LED 2</label>
+      </div>
+      <div style="margin-top:12px">Tốc độ: <input id="effectSpeed" type="range" min="1" max="10" value="5" class="slider"></div>
+      <div style="margin-top:12px">
+        <button class="btn" onclick="applyEffect()">Áp dụng</button>
+        <button class="btn secondary" onclick="stopEffect()">Tắt</button>
+      </div>
+    </div>
+
+    <div class="card page" id="page-wifi" style="display:none">
+      <div class="title">WiFi đã lưu</div>
+      <div id="wifiList">Đang tải...</div>
+      <div style="margin-top:12px">
+        <input id="newSsid" placeholder="SSID" style="padding:8px;border-radius:8px;width:46%">
+        <input id="newPass" placeholder="Pass" style="padding:8px;border-radius:8px;width:46%">
+        <button class="btn" onclick="addWifi()">Lưu</button>
+      </div>
+    </div>
+
+    <div class="card page" id="page-settings" style="display:none">
+      <div class="title">Cài đặt</div>
+      <div class="kv">Ngôn ngữ: <span id="langLabel">Tiếng Việt</span></div>
+      <div style="height:8px"></div>
+      <div class="kv">Theme: <span id="themeLabel">{{ theme }}</span></div>
+      <div style="margin-top:20px; display:flex; gap:10px;">
+        <button id="btnThemeMobile" class="btn secondary">Giao diện</button>
+        <button id="btnLangMobile" class="btn secondary">Ngôn ngữ</button>
+      </div>
+      <div style="margin-top:12px">
+        <button class="btn secondary" onclick="refreshStatus()">Lấy trạng thái</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="log-panel" id="logPanel">
+    <div class="log-title">Realtime Log</div>
+    <div id="log" class="log-box"></div>
+  </div>
 </div>
 
+<div class="bottom-nav" id="bottomNav" style="display:none">
+  <button id="m-led1" onclick="showPage('led1')">💡</button>
+  <button id="m-led2" onclick="showPage('led2')">🔆</button>
+  <button id="m-wifi" onclick="showPage('wifi')">📶</button>
+  <button id="m-effects" onclick="showPage('effects')">✨</button>
+  <button id="m-settings" onclick="showPage('settings')">⚙️</button>
+</div>
+
+<script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
 <script src="/static/app.js"></script>
 
 </body>
