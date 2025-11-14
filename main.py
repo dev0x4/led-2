@@ -7,7 +7,7 @@ import time
 
 app = Flask(__name__)
 # Giữ nguyên async_mode="gevent" để tương thích với Render
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode="gunicorn") 
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode="gevent") 
 
 # ----------------------- Shared state -----------------------
 state = {
