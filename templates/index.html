@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ESP32 Dashboard</title>
+<link rel="stylesheet" href="/static/style.css">
+<script src="https://code.iconify.design/2/2.2.1/iconify.min.js"></script>
+</head>
+
+<body class="light">
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="icon active" id="btn-led1" onclick="showPage('led1')">
+            <span class="iconify" data-icon="mdi:lightbulb-on"></span>
+        </div>
+
+        <div class="icon" id="btn-led2" onclick="showPage('led2')">
+            <span class="iconify" data-icon="mdi:lightbulb"></span>
+        </div>
+
+        <div class="icon" id="btn-wifi" onclick="showPage('wifi')">
+            <span class="iconify" data-icon="mdi:wifi"></span>
+        </div>
+
+        <div class="icon" id="btn-settings" onclick="showPage('settings')">
+            <span class="iconify" data-icon="mdi:cog"></span>
+        </div>
+
+        <div class="icon" id="btn-log" onclick="showPage('logPage')">
+            <span class="iconify" data-icon="mdi:console"></span>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main">
+
+        <!-- LED1 -->
+        <div id="led1" class="page active">
+            <h2>LED 1</h2>
+
+            <div class="card">
+                <button class="nbtn" onclick="toggleLED(1)">Bật/Tắt</button>
+            </div>
+
+            <div class="card">
+                <p>Độ sáng: <b id="val1">0</b>%</p>
+                <input type="range" id="slider1" min="0" max="100" class="slider">
+            </div>
+        </div>
+
+        <!-- LED2 -->
+        <div id="led2" class="page">
+            <h2>LED 2</h2>
+
+            <div class="card">
+                <button class="nbtn" onclick="toggleLED(2)">Bật/Tắt</button>
+            </div>
+
+            <div class="card">
+                <p>Độ sáng: <b id="val2">0</b>%</p>
+                <input type="range" id="slider2" min="0" max="100" class="slider">
+            </div>
+        </div>
+
+        <!-- WIFI -->
+        <div id="wifi" class="page">
+            <h2>WiFi</h2>
+            <div class="card">
+                <p>Danh sách WiFi sẽ hiện từ ESP (mode PC không hỗ trợ scan).</p>
+            </div>
+        </div>
+
+        <!-- SETTINGS -->
+        <div id="settings" class="page">
+            <h2>Cài đặt</h2>
+            <div class="card">
+                <button class="nbtn" onclick="setTheme('light')">Light</button>
+                <button class="nbtn" onclick="setTheme('dark')">Dark</button>
+            </div>
+        </div>
+
+        <!-- LOG -->
+        <div id="logPage" class="page">
+            <h2>Nhật ký</h2>
+            <pre id="logBox">Log sẽ hiển thị khi ESP gửi status</pre>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="/static/app.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,89 @@
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* THEME */
+body.light { background:#fff; color:#000; }
+body.dark  { background:#111; color:#fff; }
+
+/* APP LAYOUT */
+.app {
+    display: flex;
+    height: 100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 70px;
+    background: rgba(0,0,0,0.3);
+    backdrop-filter: blur(12px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 14px;
+}
+
+.sidebar .icon {
+    width: 40px;
+    height: 40px;
+    margin: 12px 0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    cursor: pointer;
+    border-radius: 14px;
+    color:white;
+    opacity:.6;
+    transition: 0.2s;
+}
+
+.sidebar .icon.active {
+    opacity: 1;
+    transform: scale(1.18);
+    background: #00aaff;
+}
+
+/* MAIN */
+.main {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+/* PAGE */
+.page {
+    display:none;
+}
+.page.active {
+    display:block;
+}
+
+/* CARD */
+.card {
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(14px);
+    padding: 20px;
+    margin-bottom: 16px;
+    border-radius:20px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.25);
+}
+
+/* BUTTON NEON */
+.nbtn {
+    padding: 12px 22px;
+    border: none;
+    border-radius:14px;
+    color: white;
+    background:#00aaff;
+    box-shadow: 0 0 12px #00aaff;
+    cursor:pointer;
+}
+
+/* SLIDER */
+.slider {
+    width: 100%;
+    height: 10px;
+    border-radius: 10px;
+    background: #aaa;
+}
